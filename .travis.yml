@@ -5,6 +5,9 @@ env:
   global:
   - PI_APP=alexa-youtube
 script:
+- ls
+- ls $TRAVIS_BUILD_DIR
+- ls $TRAVIS_BUILD_DIR/alexasecrets
 - docker run --rm -v $TRAVIS_BUILD_DIR/code:/code -v $TRAVIS_BUILD_DIR/alexasecrets:/root migruiz/alexa-cli 
 notifications:
   email:
@@ -12,3 +15,4 @@ notifications:
 before_install:
 - openssl aes-256-cbc -K $encrypted_83630750896a_key -iv $encrypted_83630750896a_iv
   -in alexasecrets.tar.enc -out alexasecrets.tar -d
+- tar xvf alexasecrets.tar
