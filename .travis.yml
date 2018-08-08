@@ -5,7 +5,7 @@ env:
   global:
   - PI_APP=alexa-youtube
 script:
-- docker run --rm -v code:/code -v alexasecrets:/root migruiz/alexa-cli deploy
+- docker run --rm -v $TRAVIS_BUILD_DIR/code:/code -v $TRAVIS_BUILD_DIR/alexasecrets:/root migruiz/alexa-cli  "yes Y | ask deploy"
 notifications:
   email:
   - mig.ruiz@gmail.com
