@@ -5,9 +5,6 @@ env:
   global:
   - PI_APP=alexa-youtube
 script:
-- ls
-- ls $TRAVIS_BUILD_DIR
-- ls $TRAVIS_BUILD_DIR/alexasecrets
 - docker run --rm -v $TRAVIS_BUILD_DIR/code:/code -v $TRAVIS_BUILD_DIR/alexasecrets:/root migruiz/alexa-cli deploy --force
 notifications:
   email:
