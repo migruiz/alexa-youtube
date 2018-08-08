@@ -8,7 +8,7 @@ script:
 - ls
 - ls $TRAVIS_BUILD_DIR
 - ls $TRAVIS_BUILD_DIR/alexasecrets
-- docker run --rm -v $TRAVIS_BUILD_DIR/code:/code -v $TRAVIS_BUILD_DIR/alexasecrets:/root migruiz/alexa-cli 
+- docker run  -v $TRAVIS_BUILD_DIR/code:/code -v $TRAVIS_BUILD_DIR/alexasecrets:/root migruiz/alexa-cli 
 notifications:
   email:
   - mig.ruiz@gmail.com
