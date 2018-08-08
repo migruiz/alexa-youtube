@@ -1,0 +1,11 @@
+sudo: required
+services:
+- docker
+env:
+  global:
+  - PI_APP=alexa-youtube
+script:
+-  docker run --rm -v code:/code -v alexasecrets:/root migruiz/alexa-cli deploy
+notifications:
+  email:
+  - mig.ruiz@gmail.com
