@@ -18,7 +18,11 @@
         "endpoint": {
           "sourceDir": "./lambda/eu-west-1_ask-custom-helloworld-default"
         },
-        "interfaces": []
+        "interfaces": [
+          {
+            "type": "AUDIO_PLAYER"
+          }
+        ]
       }
     },
     "manifestVersion": "1.0",
