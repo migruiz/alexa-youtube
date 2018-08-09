@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "youtube",
+      "invocationName": "hello world",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -18,13 +18,7 @@
         {
           "name": "HelloWorldIntent",
           "samples": [
-            "how are you",
-            "hi",
-            "say hi world",
-            "say hi",
-            "hello",
-            "say hello world",
-            "say hello"
+            "hello"
           ]
         }
       ]
