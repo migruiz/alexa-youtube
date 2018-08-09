@@ -10,7 +10,7 @@ let en = {
             smallImageUrl: 'https://alexademo.ninja/skills/logo-108.png'
         }
     },
-    url: 'http://14103.live.streamtheworld.com:3690/LA_MEGA_BOG_SC',
+    url: 'https://18243.live.streamtheworld.com/VIBRA_SC',
     startJingle: 'https://s3-eu-west-1.amazonaws.com/alexa.maxi80.com/assets/jingle.m4a'
 };
 
@@ -26,7 +26,7 @@ let fr = {
     
         }
     },
-    url: 'http://14103.live.streamtheworld.com:3690/LA_MEGA_BOG_SC',
+    url: 'https://18243.live.streamtheworld.com/VIBRA_SC',
     startJingle: 'https://s3-eu-west-1.amazonaws.com/alexa.maxi80.com/assets/jingle.m4a'
 };
 
@@ -42,7 +42,7 @@ let it = {
     
         }
     },
-    url: 'http://14103.live.streamtheworld.com:3690/LA_MEGA_BOG_SC',
+    url: 'https://18243.live.streamtheworld.com/VIBRA_SC',
     startJingle: 'https://s3-eu-west-1.amazonaws.com/alexa.maxi80.com/assets/jingle.m4a'
 };
 
@@ -58,7 +58,7 @@ let es = {
     
         }
     },
-    url: 'http://14103.live.streamtheworld.com:3690/LA_MEGA_BOG_SC',
+    url: 'https://18243.live.streamtheworld.com/VIBRA_SC',
     startJingle: 'https://s3-eu-west-1.amazonaws.com/alexa.maxi80.com/assets/jingle.m4a'
 };
 
