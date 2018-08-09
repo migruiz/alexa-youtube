@@ -49,7 +49,7 @@ let it = {
 let es = {
     card: {
         title: 'Mi Radio',
-        text: 'Menos conversación, más música',
+        text: 'Menos conversación, más  música',
         image: {
             image: {
                 largeImageUrl: 'https://alexademo.ninja/skills/logo-512.png',
