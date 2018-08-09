@@ -22,7 +22,13 @@
       "custom": {
         "endpoint": {
           "sourceDir": "lambda/custom"
-        }
+        },
+        "regions": {
+          "EU":{
+            "endpoint": {
+              "sourceDir": "lambda/custom"  
+            }
+          }
       }
     },
     "manifestVersion": "1.0"
