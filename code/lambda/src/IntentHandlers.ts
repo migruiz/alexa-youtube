@@ -116,7 +116,16 @@ class Util {
     export const IntentHandler: IHandler = {
         // launch request and play intent have the same handler
         'LaunchRequest': async function (input: HandlerInput): Promise<Response> {
-            return this['PlayAudio'](input);
+            
+            const speechText = 'Welcome to the Alexa Skills Kit, you can say hello! Alejandro Ruiz';
+
+            return input.responseBuilder
+              .speak(speechText)
+              .reprompt(speechText)
+              .withSimpleCard('Hello World' , speechText)
+              .getResponse();
+
+
         },
         'PlayAudio': async function (input: HandlerInput): Promise<Response> {
 
