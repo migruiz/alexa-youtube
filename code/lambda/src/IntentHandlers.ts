@@ -9,108 +9,6 @@ import { audioData } from './AudioAssets';
 import { audio } from './AudioController';
 import { i18n } from './utils/I18N';
 
-class Util {
-
-    /*
-     Returns true if we should play the jingle for that user.
-     Rule is we play the jingle once per rolling period of 24hours.
-    
-     This function relies on a DDB table to keep track of last played time per user.
-     It silently fails if the table does not exist of if there is a permission issue.
-    
-     The table definition is 
-     aws dynamodb describe-table --table-name my_radio
-    {
-        "Table": {
-            "TableArn": "arn:aws:dynamodb:us-east-1:<YOUR ACCOUNT ID>:table/my_radio",
-            "AttributeDefinitions": [
-                {
-                    "AttributeName": "userId",
-                    "AttributeType": "S"
-                }
-            ],
-            "ProvisionedThroughput": {
-                "NumberOfDecreasesToday": 0,
-                "WriteCapacityUnits": 5,
-                "ReadCapacityUnits": 5
-            },
-            "TableSizeBytes": 0,
-            "TableName": "my_radio",
-            "TableStatus": "ACTIVE",
-            "KeySchema": [
-                {
-                    "KeyType": "HASH",
-                    "AttributeName": "userId"
-                }
-            ],
-            "ItemCount": 0,
-            "CreationDateTime": 1513766788.6
-        }
-    }
-    
-     At runtime, the code needs the following IAM policy attached to the lambda role.
-    
-    {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "sid123",
-                "Effect": "Allow",
-                "Action": [
-                    "dynamodb:PutItem",
-                    "dynamodb:GetItem",
-                    "dynamodb:UpdateItem"
-                ],
-                "Resource": "arn:aws:dynamodb:us-east-1:YOUR_ACCOUNT_ID:table/my_radio"
-            }
-        ]
-    }
-    
-    */
-    static async shouldPlayJingle(handlerInput: HandlerInput): Promise<boolean> {
-
-        let WILL_PLAY_JINGLE: boolean = false;
-
-        // is a jingle defined for this locale ?
-        if (audioData(handlerInput.requestEnvelope.request).startJingle === undefined) {
-            return WILL_PLAY_JINGLE;
-        }
-
-        let attributes = await handlerInput.attributesManager.getPersistentAttributes();
-
-        // Check if user is invoking the skill the first time and initialize preset values
-        if (attributes === undefined || Object.keys(attributes).length === 0) {
-            attributes = {
-                lastPlayed: 0,
-                playedCount: 0
-            };
-            handlerInput.attributesManager.setPersistentAttributes(attributes);
-        }
-
-        let lastPlayedEPOCH = attributes.lastPlayed;
-        let now = Math.round(new Date().getTime());
-
-        // When last played is more that playOnceEvery ago, agree to play the jingle
-        WILL_PLAY_JINGLE = (lastPlayedEPOCH === 0) || (lastPlayedEPOCH + Constants.jingle.playOnceEvery < now);
-        // console.log("lastPlayedEPOCH : " + lastPlayedEPOCH);
-        // console.log("playOnceEvery   : " + constants.jingle.playOnceEvery);
-        // console.log("now             : " + now);
-        // console.log("last + every    : " + (lastPlayedEPOCH + constants.jingle.playOnceEvery));
-        // console.log("WILL PLAY       : " + WILL_PLAY_JINGLE);
-
-        if (WILL_PLAY_JINGLE) {
-
-            // update the DB
-            // console.log("We will play the jingle, let's update the DB to remember that");
-            attributes.lastPlayed = now;
-            attributes.playedCount = attributes.playedCount + 1;
-            handlerInput.attributesManager.savePersistentAttributes();
-        };
-
-        return WILL_PLAY_JINGLE;
-
-    }
-}
 
 
     export const IntentHandler: IHandler = {
@@ -124,6 +22,7 @@ class Util {
             //   .reprompt(speechText)
             //   .withSimpleCard('Hello World' , speechText)
             //   .getResponse();
+            
         },
         'PlayAudio': async function (input: HandlerInput): Promise<Response> {
 
