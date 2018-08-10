@@ -29,7 +29,7 @@ class AudioController {
         return response;
     }
 
-    play(url: string, offset: number, text?: string, cardData?: ui.StandardCard): Response {
+    play(url: string, offset: number, initText?: string, cardData?: ui.StandardCard): Response {
         /*
              *  Using the function to begin playing audio when:
              *      Play Audio intent invoked.
@@ -52,8 +52,8 @@ class AudioController {
             .addAudioPlayerPlayDirective('REPLACE_ALL', url, url, offset)
             .withShouldEndSession(true);
 
-        if (text) {
-            result.speak(text);
+        if (initText) {
+            result.speak(initText);
         }
 
         // add support for radio meta data.  

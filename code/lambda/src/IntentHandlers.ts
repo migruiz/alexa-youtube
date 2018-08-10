@@ -32,7 +32,7 @@ import { i18n } from './utils/I18N';
 
 
                 // play the radio directly
-                return Promise.resolve(audio.play(audioData(request).url, 0, i18n.S(request, 'WELCOME_MSG', audioData(request).card.title), audioData(request).card));
+                return Promise.resolve(audio.play(audioData(request).url, 0, "Connecting", audioData(request).card));
         },
         'AMAZON.HelpIntent': async function (input: HandlerInput): Promise<Response> {
             const request = input.requestEnvelope.request;
