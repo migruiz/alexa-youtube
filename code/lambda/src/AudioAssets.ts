@@ -10,7 +10,7 @@ let en = {
             smallImageUrl: 'https://alexademo.ninja/skills/logo-108.png'
         }
     },
-    url: 'https://18243.live.streamtheworld.com/VIBRA_SC'
+    url: 'https://drive.google.com/uc?export=download&id=1ZC7EIsCt7AdtEZZnqf5-pXnWNgubxK2i'
 };
 
 
