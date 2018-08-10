@@ -1,7 +1,7 @@
 /* CONSTANTS */
 
 exports.skill = {
-  appId: '',
+  appId: "amzn1.ask.skill.b7eaf171-7992-463d-95f1-1829dea8230d",
   dynamoDBTableName: 'Audio-Player-Multi-Stream',
 };
 
