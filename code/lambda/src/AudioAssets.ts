@@ -10,7 +10,7 @@ let en = {
             smallImageUrl: 'https://alexademo.ninja/skills/logo-108.png'
         }
     },
-    url: 'https://drive.google.com/uc?export=download&id=1kZsT3dqgK1-u9GKiBOeXg_9lkKM5jef0'
+    url: 'https://drive.google.com/uc?export=download&id=1xOJ-LlyVbpUY3p7-ddrSrXlIoSYrJe83'
 };
 
 
