@@ -19,8 +19,8 @@ const LaunchRequestHandler = {
     let reprompt;
 
     if (!playbackInfo.hasPreviousPlaybackSession) {
-      message = 'Welcome to the AWS Podcast. you can ask to play the audio to begin the podcast.';
-      reprompt = 'You can say, play the audio, to begin.';
+      message = 'Welcome to my youtube player.';
+      reprompt = 'You can say, play to begin.';
     } else {
       playbackInfo.inPlaybackSession = false;
       message = `You were listening to ${constants.audioData[playbackInfo.playOrder[playbackInfo.index]].title}. Would you like to resume?`;
