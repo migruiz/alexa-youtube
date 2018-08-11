@@ -19,7 +19,7 @@ const LaunchRequestHandler = {
     let reprompt;
 
     if (!playbackInfo.hasPreviousPlaybackSession) {
-      message = 'Welcome to my youtube player.';
+      message = 'Welcome to my youtube player. You can say, play to begin.';
       reprompt = 'You can say, play to begin.';
     } else {
       playbackInfo.inPlaybackSession = false;
@@ -477,8 +477,7 @@ const controller = {
     responseBuilder
       .speak(`This is ${podcast.title}`)
       .withShouldEndSession(true)
-      .addAudioPlayerPlayDirective(playBehavior, podcast.url, token, offsetInMilliseconds, null);
-
+      .addAudioPlayerPlayDirective(playBehavior, podcast.url, token, offsetInMilliseconds);
     if (await canThrowCard(handlerInput)) {
       const cardTitle = `Playing ${podcast.title}`;
       const cardContent = `Playing ${podcast.title}`;
