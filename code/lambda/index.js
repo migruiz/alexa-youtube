@@ -19,7 +19,7 @@ const LaunchRequestHandler = {
     let reprompt;
 
     if (!playbackInfo.hasPreviousPlaybackSession) {
-      message = 'Welcome to my youtube player. You can say, play to begin.';
+      message = 'Welcome to my youtube player. You can say play to begin.';
       reprompt = 'You can say, play to begin.';
     } else {
       playbackInfo.inPlaybackSession = false;
