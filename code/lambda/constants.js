@@ -7,11 +7,19 @@ exports.skill = {
 
 exports.audioData = [
   {
-    title: 'Episode 139',
-    url: 'https://feeds.soundcloud.com/stream/274166909-amazon-web-services-306355661-aws-podcast-episode-139.mp3',
+    title: 'Azul Azul Bomba',
+    url: 'https://drive.google.com/uc?export=download&id=1SbSVsWS8gwZHu9Jvgi1vXHhvgn0WhhqQ',
   },
   {
-    title: 'Episode 140',
-    url: 'https://feeds.soundcloud.com/stream/275202399-amazon-web-services-306355661-amazon-web-services.mp3',
+    title: 'Miguel Bose Amante Bandido',
+    url: 'https://drive.google.com/uc?export=download&id=1fDFDokCEqeMBWzsyj2WDSYqGPatxSXn_',
+  },
+  {
+    title: 'Maluma El Prestamo',
+    url: 'https://drive.google.com/uc?export=download&id=1kZsT3dqgK1-u9GKiBOeXg_9lkKM5jef0',
+  },
+  {
+    title: 'Maluma Felices los cuatro',
+    url: 'https://drive.google.com/uc?export=download&id=1xOJ-LlyVbpUY3p7-ddrSrXlIoSYrJe83',
   },
 ];
