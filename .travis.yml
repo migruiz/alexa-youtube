@@ -11,7 +11,7 @@ script:
 - docker run --rm                                   -v $TRAVIS_BUILD_DIR/code:/code
   -v $TRAVIS_BUILD_DIR/alexasecrets/.ask:/root/.ask -v $TRAVIS_BUILD_DIR/alexasecrets/.aws:/root/.aws
   migruiz/alexa-cli deploy -t model
-- docker run --rm  --entrypoint "/uploadlambdaTS.sh"  -v $TRAVIS_BUILD_DIR/code:/code
+- docker run --rm  --entrypoint "/uploadlambda.sh"  -v $TRAVIS_BUILD_DIR/code:/code
   -v $TRAVIS_BUILD_DIR/alexasecrets/.ask:/root/.ask -v $TRAVIS_BUILD_DIR/alexasecrets/.aws:/root/.aws
   migruiz/alexa-cli alexa-youtube
 notifications:

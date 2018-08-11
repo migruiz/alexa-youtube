@@ -5,7 +5,7 @@
 
 const alexa = require('ask-sdk');
 const constants = require('./constants');
-
+//process.env.AWS_SDK_LOAD_CONFIG = true; 
 
 /* INTENT HANDLERS */
 
