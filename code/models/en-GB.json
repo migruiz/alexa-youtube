@@ -23,34 +23,54 @@
           ]
         },
         {
-          "name": "AMAZON.PauseIntent"
-        },
-        {
-          "name": "AMAZON.ResumeIntent"
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": [
-            "help me please",
-            "help please",
-            "what should i do",
-            "what's next",
-            "how can I listen to my radio",
-            "tell me how to play",
-            "tell me how to stop",
-            "tell me how to resume",
-            "how to stop"
-          ]
-        },
-        {
-          "name": "AMAZON.StopIntent"
-        },
-        {
-          "name": "AMAZON.CancelIntent"
-        },
-        {
-          "name": "AMAZON.StartOverIntent"
-        }
+          "name": "AMAZON.PauseIntent",
+          "slots": [],
+          "samples": []
+      },
+      {
+          "name": "AMAZON.ResumeIntent",
+          "slots": [],
+          "samples": []
+      },
+      {
+          "name": "AMAZON.PreviousIntent",
+          "slots": [],
+          "samples": []
+      },
+      {
+          "name": "AMAZON.StartOverIntent",
+          "slots": [],
+          "samples": []
+      },
+      {
+          "name": "AMAZON.YesIntent",
+          "slots": [],
+          "samples": []
+      },
+      {
+          "name": "AMAZON.NoIntent",
+          "slots": [],
+          "samples": []
+      },
+      {
+          "name": "AMAZON.NextIntent",
+          "slots": [],
+          "samples": []
+      },{
+        "name": "AMAZON.CancelIntent",
+        "slots": [],
+        "samples": []
+    },
+    {
+        "name": "AMAZON.HelpIntent",
+        "slots": [],
+        "samples": []
+    },
+    {
+        "name": "AMAZON.StopIntent",
+        "slots": [],
+        "samples": []
+    }
       ]
     }
   }
