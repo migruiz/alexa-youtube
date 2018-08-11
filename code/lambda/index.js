@@ -14,12 +14,18 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   async handle(handlerInput) {
-    //const playbackInfo = await getPlaybackInfo(handlerInput);
+    const playbackInfo = await getPlaybackInfo(handlerInput);
     let message;
     let reprompt;
 
-    message = 'Welcome to the AWS Podcast. you can ask to play the audio to begin the podcast.';
-    reprompt = 'You can say, play the audio, to begin.';
+    if (!playbackInfo.hasPreviousPlaybackSession) {
+      message = 'Welcome to the AWS Podcast. you can ask to play the audio to begin the podcast.';
+      reprompt = 'You can say, play the audio, to begin.';
+    } else {
+      playbackInfo.inPlaybackSession = false;
+      message = `You were listening to ${constants.audioData[playbackInfo.playOrder[playbackInfo.index]].title}. Would you like to resume?`;
+      reprompt = 'You can say yes to resume or no to play from the top.';
+    }
 
     return handlerInput.responseBuilder
       .speak(message)
@@ -117,10 +123,16 @@ const CheckAudioInterfaceHandler = {
 
 const StartPlaybackHandler = {
   async canHandle(handlerInput) {
-    //const playbackInfo = await getPlaybackInfo(handlerInput);
+    const playbackInfo = await getPlaybackInfo(handlerInput);
     const request = handlerInput.requestEnvelope.request;
 
-    
+    if (!playbackInfo.inPlaybackSession) {
+      return request.type === 'IntentRequest' && request.intent.name === 'PlayAudio';
+    }
+    if (request.type === 'PlaybackController.PlayCommandIssued') {
+      return true;
+    }
+
     if (request.type === 'IntentRequest') {
       return request.intent.name === 'PlayAudio' ||
         request.intent.name === 'AMAZON.ResumeIntent';
@@ -451,17 +463,28 @@ const controller = {
       responseBuilder
     } = handlerInput;
 
- 
+    const playbackInfo = await getPlaybackInfo(handlerInput);
+    const {
+      playOrder,
+      offsetInMilliseconds,
+      index
+    } = playbackInfo;
 
     const playBehavior = 'REPLACE_ALL';
-    const podcast = constants.audioData[0];
+    const podcast = constants.audioData[playOrder[index]];
+    const token = playOrder[index];
 
     responseBuilder
       .speak(`This is ${podcast.title}`)
       .withShouldEndSession(true)
-      .addAudioPlayerPlayDirective(playBehavior, podcast.url, podcast.url, 0);
+      .addAudioPlayerPlayDirective(playBehavior, podcast.url, token, offsetInMilliseconds, null);
 
- 
+    if (await canThrowCard(handlerInput)) {
+      const cardTitle = `Playing ${podcast.title}`;
+      const cardContent = `Playing ${podcast.title}`;
+      responseBuilder.withSimpleCard(cardTitle, cardContent);
+    }
+
     return responseBuilder.getResponse();
   },
   stop(handlerInput) {
@@ -557,13 +580,13 @@ const skillBuilder = alexa.SkillBuilders.standard();
 exports.handler = skillBuilder
   .addRequestHandlers(
     CheckAudioInterfaceHandler,
-    StartPlaybackHandler,
     LaunchRequestHandler,
     HelpHandler,
     SystemExceptionHandler,
     SessionEndedRequestHandler,
     YesHandler,
     NoHandler,
+    StartPlaybackHandler,
     NextPlaybackHandler,
     PreviousPlaybackHandler,
     PausePlaybackHandler,
@@ -575,5 +598,9 @@ exports.handler = skillBuilder
     ExitHandler,
     AudioPlayerEventHandler
   )
+  .addRequestInterceptors(LoadPersistentAttributesRequestInterceptor)
+  .addResponseInterceptors(SavePersistentAttributesResponseInterceptor)
   .addErrorHandlers(ErrorHandler)
+  .withAutoCreateTable(true)
+  .withTableName(constants.skill.dynamoDBTableName)
   .lambda();
