@@ -477,7 +477,8 @@ const controller = {
     responseBuilder
       .speak(`This is ${podcast.title}`)
       .withShouldEndSession(true)
-      .addAudioPlayerPlayDirective(playBehavior, podcast.url, token, offsetInMilliseconds);
+      .addAudioPlayerPlayDirective(playBehavior, podcast.url, token, offsetInMilliseconds, null);
+
     if (await canThrowCard(handlerInput)) {
       const cardTitle = `Playing ${podcast.title}`;
       const cardContent = `Playing ${podcast.title}`;
