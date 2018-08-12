@@ -5,6 +5,7 @@
 
 const alexa = require('ask-sdk');
 const constants = require('./constants');
+//process.env.AWS_SDK_LOAD_CONFIG = true; 
 
 /* INTENT HANDLERS */
 
@@ -68,15 +69,10 @@ const AudioPlayerEventHandler = {
         break;
       case 'PlaybackNearlyFinished':
         {
-          if (playbackInfo.nextStreamEnqueued) {
-            break;
-          }
 
           const enqueueIndex = (playbackInfo.index + 1) % constants.audioData.length;
 
-          if (enqueueIndex === 0 && !playbackSetting.loop) {
-            break;
-          }
+   
 
           playbackInfo.nextStreamEnqueued = true;
 
