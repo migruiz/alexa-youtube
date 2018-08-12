@@ -6,21 +6,44 @@ exports.skill = {
 };
 
 exports.audioData = [
+  {
+    title: 'travesuras',
+    url: 'https://drive.google.com/uc?export=download&id=109S2BwOazS8353FUu6GdBj9kpWUfnXsZ',
+  },
   
   {
-    title: 'Maluma Felices los cuatro',
-    url: 'https://drive.google.com/uc?export=download&id=1xOJ-LlyVbpUY3p7-ddrSrXlIoSYrJe83',
+    title: 'pajaritos en el aire',
+    url: 'https://drive.google.com/uc?export=download&id=16JjWDL7QHY6c529fzKUuvHBv6-c7hLDQ',
   },
   {
     title: 'Azul Azul Bomba',
-    url: 'https://drive.google.com/uc?export=download&id=1SbSVsWS8gwZHu9Jvgi1vXHhvgn0WhhqQ',
+    url: 'https://drive.google.com/uc?export=download&id=1a6H4ITMA7snbmfsu9y8AER-eW4fbWAlx',
   },
+  
   {
-    title: 'Miguel Bose Amante Bandido',
-    url: 'https://drive.google.com/uc?export=download&id=1fDFDokCEqeMBWzsyj2WDSYqGPatxSXn_',
+    title: 'Maluma, felices los cuatro',
+    url: 'https://drive.google.com/uc?export=download&id=1FUnToDOHtkJPQAWIYtpdYl6ZG29tw4ln',
   },
+  
   {
-    title: 'Leon Larregui Brillas',
-    url: 'https://drive.google.com/uc?export=download&id=1ziJAjKg42HMIJbbm_O2jblrZ96Jpq3i5',
-  }
+    title: 'Shakira, me enamore',
+    url: 'https://drive.google.com/uc?export=download&id=12XwgozFl_usVoNEYvtzEaSGnxXYo0QnX',
+  },
+  
+  {
+    title: 'Maluma, el prestamo',
+    url: 'https://drive.google.com/uc?export=download&id=1wGfAkBvrzq9xwfZW_BUgz-ABY-w0wKtX',
+  },
+  
+  {
+    title: 'Kevin Roldan, salgamos',
+    url: 'https://drive.google.com/uc?export=download&id=1cD6f2PsN3c9x23D9xh_6D8olXo9UhGat',
+  },
+  
+  {
+    title: 'masterboys, la quemona',
+    url: 'https://drive.google.com/uc?export=download&id=1dWzJD2j2P70SWFTD_VGeXAYpCvW86Pg6',
+  },
+  
+ 
 ];
