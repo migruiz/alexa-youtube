@@ -7,6 +7,11 @@ exports.skill = {
 
 exports.audioData = [
   {
+    title: 'la vaca lola',
+    url: 'https://firebasestorage.googleapis.com/v0/b/alexa-468e9.appspot.com/o/vaca.mp3?alt=media&token=56eea7ef-a836-45be-b87a-d2a515fb918a',
+  },
+  
+  {
     title: 'travesuras',
     url: 'https://drive.google.com/uc?export=download&id=109S2BwOazS8353FUu6GdBj9kpWUfnXsZ',
   },
