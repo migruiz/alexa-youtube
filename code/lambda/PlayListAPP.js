@@ -14,6 +14,7 @@ exports.PlaylistAPP=function(){
         playlistId=playlistId;
         appId='APPS/PlaylistAPP/'+playlistId;
         playlist=await getyoutubePlaylistAsync(playlistId);
+        state=await getAppState(playlistId);
     }    
     function getSongInfo(song){
         return {
@@ -26,8 +27,9 @@ exports.PlaylistAPP=function(){
         var firstSong=playlist[0];
         return getSongInfo(firstSong)
     }
-    this.getPrevSongInfo=function(songId){
-        var prevSong=getPrevSong(songId);
+    this.getPrevSongInfo=function(){
+        var currentSongId=state.songId;
+        var prevSong=getPrevSong(currentSongId);
         return getSongInfo(prevSong);
         function getPrevSong(songId){
             for (let index = 0; index < playlist.length; index++) {
@@ -45,8 +47,9 @@ exports.PlaylistAPP=function(){
             return playlist[0];
         }
     }
-    this.getNextSongInfo=function(songId){
-        var nextSong=getNextSong(songId);
+    this.getNextSongInfo=function(){
+        var currentSongId=state.songId;
+        var nextSong=getNextSong(currentSongId);
         return getSongInfo(nextSong);
         function getNextSong(songId){
             for (let index = 0; index < playlist.length; index++) {
@@ -82,7 +85,16 @@ exports.PlaylistAPP=function(){
     }
 }
 
-
+async function getAppState(playlistId){
+    var id='APPS/PlaylistAPP/'+playlistId;
+    var params = {
+        TableName: table,
+        Key:{
+            "id":id
+        }
+    };
+    return await getAsync(params);
+}
 async function getyoutubePlaylistAsync(playlistId){
     var id='youtubeplaylists/'+playlistId;
     var params = {

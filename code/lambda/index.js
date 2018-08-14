@@ -75,7 +75,7 @@ const CheckAudioInterfaceHandler = {
 
 const StartPlaybackHandler = {
   canHandle(handlerInput) {
-    return  handlerInput.requestEnvelope.request.type === 'PlaybackController.PlayCommandIssued'
+    return  request.type === 'IntentRequest' && request.intent.name === 'PlayAudio';
   },
   async handle(handlerInput) {
     var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync(DEFaultPlayLISTID);
@@ -86,11 +86,10 @@ const StartPlaybackHandler = {
 
 const NextPlaybackHandler = {
   canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'PlaybackController.NextCommandIssued' 
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.NextIntent';
   },
   async handle(handlerInput) {
-    var token=handlerInput.requestEnvelope.request.token;
-    var songInfo=await playlistAppDynamo.getNextSongInfoAsync(token);
+    var songInfo=await playlistAppDynamo.getNextSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
@@ -98,11 +97,10 @@ const NextPlaybackHandler = {
 
 const PreviousPlaybackHandler = {
   canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'PlaybackController.PreviousCommandIssued';
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.PreviousIntent';
   },
   async handle(handlerInput) {
-    var token=handlerInput.requestEnvelope.request.token;
-    var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync(token);
+    var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },

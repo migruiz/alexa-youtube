@@ -22,17 +22,15 @@ exports.getFirstSongInfoAsync=async function (playlistId){
     await app.initAppAsync(playlistId);
     return app.getFirstSongInfo();
 }
-exports.getNextSongInfoAsync=async function (currentSongTokenJson){
-    var songToken=JSON.parse(currentSongTokenJson);
+exports.getNextSongInfoAsync=async function (playlistId){
     var app=new PlaylistAPP();
     await app.initAppAsync(playlistId);
-    return app.getNextSongInfo(songToken.songId);
+    return app.getNextSongInfo();
 }
-exports.getPreviousSongInfoAsync=async function (currentSongTokenJson){
-    var songToken=JSON.parse(currentSongTokenJson);
+exports.getPreviousSongInfoAsync=async function (playlistId){
     var app=new PlaylistAPP();
     await app.initAppAsync(playlistId);
-    return app.getNextSongInfo(songToken.songId);
+    return app.getNextSongInfo();
 }
 
 
