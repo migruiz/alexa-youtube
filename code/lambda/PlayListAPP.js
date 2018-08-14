@@ -23,13 +23,24 @@ exports.PlaylistAPP=function(){
         };
     }
 
-    this.getFirstSongInfo=function(){
-        var firstSong=playlist[0];
-        return getSongInfo(firstSong)
+    this.getLastPlayedSongInfo=function(){
+        if (state){
+            for (let index = 0; index < playlist.length; index++) {
+                const song = playlist[index];
+                if (song.id===state.currentPlayingSongId){
+                    return getSongInfo(song);
+                }
+            }
+            var firstSong=playlist[0];
+            return getSongInfo(firstSong)
+        }
+        else{
+            var firstSong=playlist[0];
+            return getSongInfo(firstSong)
+        }
     }
     this.getPrevSongInfo=function(){
-        var currentSongId=state.songId;
-        var prevSong=getPrevSong(currentSongId);
+        var prevSong=getPrevSong(state.currentPlayingSongId);
         return getSongInfo(prevSong);
         function getPrevSong(songId){
             for (let index = 0; index < playlist.length; index++) {
@@ -48,8 +59,7 @@ exports.PlaylistAPP=function(){
         }
     }
     this.getNextSongInfo=function(){
-        var currentSongId=state.songId;
-        var nextSong=getNextSong(currentSongId);
+        var nextSong=getNextSong(state.currentPlayingSongId);
         return getSongInfo(nextSong);
         function getNextSong(songId){
             for (let index = 0; index < playlist.length; index++) {

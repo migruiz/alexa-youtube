@@ -75,11 +75,15 @@ const CheckAudioInterfaceHandler = {
 
 const StartPlaybackHandler = {
   canHandle(handlerInput) {
-    return  request.type === 'IntentRequest' && request.intent.name === 'PlayAudio';
+    if (request.type === 'IntentRequest') {
+      return request.intent.name === 'PlayAudio' ||
+        request.intent.name === 'AMAZON.ResumeIntent';
+    }
+
   },
   async handle(handlerInput) {
-    var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync(DEFaultPlayLISTID);
-    audioController.play(handlerInput,firstSongInfo);
+    var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync(DEFaultPlayLISTID);
+    audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
 };

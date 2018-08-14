@@ -17,10 +17,10 @@ exports.reportSongStoppedPlayingAsync=async function(songTokenJson,offset){
     await reportSongStateAsync(songTokenJson,offset);
 }
 
-exports.getFirstSongInfoAsync=async function (playlistId){
+exports.getLastPlayedSongInfoAsync=async function (playlistId){
     var app=new PlaylistAPP();
     await app.initAppAsync(playlistId);
-    return app.getFirstSongInfo();
+    return app.getLastPlayedSongInfo();
 }
 exports.getNextSongInfoAsync=async function (playlistId){
     var app=new PlaylistAPP();
