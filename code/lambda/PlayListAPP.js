@@ -10,10 +10,10 @@ exports.PlaylistAPP=function(){
     var playlistId;
     var playlist=[];
     var state={};
-    this.initAppAsync=async function(playlistId){
+    this.initAppAsync=async function(playlistId){        
+        playlistId=playlistId;
         appId='APPS/PlaylistAPP/'+playlistId;
         playlist=await getyoutubePlaylistAsync(playlistId);
-        playlistId=playlistId;
     }    
     function getSongInfo(song){
         return {
@@ -23,7 +23,7 @@ exports.PlaylistAPP=function(){
     }
 
     this.getFirstSongInfo=function(){
-        var firstSong=this.playlist[0];
+        var firstSong=playlist[0];
         return getSongInfo(firstSong)
     }
     this.getPrevSongInfo=function(songId){
@@ -42,6 +42,7 @@ exports.PlaylistAPP=function(){
                     }
                 }            
             }
+            return playlist[0];
         }
     }
     this.getNextSongInfo=function(songId){
@@ -60,6 +61,7 @@ exports.PlaylistAPP=function(){
                     }
                 }            
             }
+            return playlist[0];
         }
     }
 
