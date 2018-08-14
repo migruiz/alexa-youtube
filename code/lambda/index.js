@@ -4,7 +4,6 @@
 /* eslint-disable  consistent-return */
 
 const alexa = require('ask-sdk');
-const constants = require('./constants');
 const playlistAppDynamo = require('./playlistAppDynamo');
 const audioController=require('./audioController');
 //process.env.AWS_SDK_LOAD_CONFIG = true; 
@@ -37,41 +36,21 @@ const AudioPlayerEventHandler = {
     switch (audioPlayerEventName) {
       case 'PlaybackStarted':
         var token=handlerInput.requestEnvelope.request.token;
-        playlistAppDynamo.reportSongStartedPlaying(token);
+        var offset=handlerInput.requestEnvelope.request.offsetInMilliseconds;
+        playlistAppDynamo.reportSongStartedPlaying(token,offset);
         break;
       case 'PlaybackFinished':
-        playbackInfo.inPlaybackSession = false;
-        playbackInfo.hasPreviousPlaybackSession = false;
-        playbackInfo.nextStreamEnqueued = false;
         break;
       case 'PlaybackStopped':
-        playbackInfo.token = getToken(handlerInput);
-        playbackInfo.index = await getIndex(handlerInput);
-        playbackInfo.offsetInMilliseconds = getOffsetInMilliseconds(handlerInput);
+        var token=handlerInput.requestEnvelope.request.token;
+        var offset=handlerInput.requestEnvelope.request.offsetInMilliseconds;
+        playlistAppDynamo.reportSongStoppedPlaying(token,offset);
         break;
       case 'PlaybackNearlyFinished':
         {
-
-          const enqueueIndex = (playbackInfo.index + 1) % constants.audioData.length;
-
-   
-
-          playbackInfo.nextStreamEnqueued = true;
-
-          const enqueueToken = playbackInfo.playOrder[enqueueIndex];
-          const playBehavior = 'ENQUEUE';
-          const podcast = constants.audioData[playbackInfo.playOrder[enqueueIndex]];
-          const expectedPreviousToken = playbackInfo.token;
-          const offsetInMilliseconds = 0;
-
-          responseBuilder.addAudioPlayerPlayDirective(
-            playBehavior,
-            podcast.url,
-            enqueueToken,
-            offsetInMilliseconds,
-            expectedPreviousToken,
-          );
-          break;
+          var currentSongToken=handlerInput.requestEnvelope.request.token;
+          var nextSongInfo=playlistAppDynamo.getNextSongInfo(currentSongToken);
+          return audioController.enqueNextSong(handlerInput,currentSongToken,nextSongInfo);
         }
       case 'PlaybackFailed':
         playbackInfo.inPlaybackSession = false;
@@ -110,26 +89,25 @@ const StartPlaybackHandler = {
 
 const NextPlaybackHandler = {
   async canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
     return request.type === 'PlaybackController.NextCommandIssued' 
   },
   handle(handlerInput) {
     var token=handlerInput.requestEnvelope.request.token;
-    var nextSongInfo=playlistAppDynamo.getNextSongInfo(token);
-    return audioController.playNext(handlerInput,nextSongInfo);
+    var songInfo=playlistAppDynamo.getNextSongInfo(token);
+    return audioController.playNext(handlerInput,songInfo);
   },
 };
 
 const PreviousPlaybackHandler = {
   async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
     const request = handlerInput.requestEnvelope.request;
-
-    return playbackInfo.inPlaybackSession &&
-      (request.type === 'PlaybackController.PreviousCommandIssued' ||
-        (request.type === 'IntentRequest' && request.intent.name === 'AMAZON.PreviousIntent'));
+    return request.type === 'PlaybackController.PreviousCommandIssued';
   },
   handle(handlerInput) {
-    return controller.playPrevious(handlerInput);
+    var token=handlerInput.requestEnvelope.request.token;
+    var songInfo=playlistAppDynamo.getPreviousSongInfo(token);
+    return audioController.playNext(handlerInput,songInfo);
   },
 };
 

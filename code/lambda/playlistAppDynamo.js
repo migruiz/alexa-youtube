@@ -34,6 +34,24 @@ function PlaylistAPP(){
         var firstSongToken={appType:'PlayListAPP',playlistId:this.playlistId, songId:firstSong.id};
         return getSongInfo(firstSong)
     }
+    this.getPrevSongInfo=function(songId){
+        var prevSong=getPrevSong(songId);
+        return getSongInfo(prevSong);
+        function getPrevSong(songId){
+            for (let index = 0; index < this.playlist.length; index++) {
+                const song = this.playlist[index];
+                if (song.id===songId){
+                    var prevSongIndex=index-1;
+                    if (prevSongIndex>=0){
+                        return this.playlist[prevSongIndex];
+                    }
+                    else{
+                        return this.playlist[0];
+                    }
+                }            
+            }
+        }
+    }
     this.getNextSongInfo=function(songId){
         var nextSong=getNextSong(songId);
         return getSongInfo(nextSong);
@@ -54,8 +72,9 @@ function PlaylistAPP(){
     }
 
 
-    this.setCurrentPlayingSong=function(songId){
+    this.setCurrentPlayingSong=function(songId,offset){
         this.state.currentPlayingSongId=songId;
+        this.state.offset=offset;
     }
     this.saveState=function(){
         var dynamoParams = {
@@ -69,13 +88,19 @@ function PlaylistAPP(){
     }
 }
 
-
-exports.reportSongStartedPlaying=async function(songTokenJson){
+function reportSongState(songTokenJson,offset){
     var songToken=JSON.parse(songTokenJson);
     var app=new PlaylistAPP();
     app.initAPP(songToken.playlistId);
-    app.setCurrentPlayingSong(songToken.songId);
+    app.setCurrentPlayingSong(songToken.songId,0);
     app.saveState();
+}
+
+exports.reportSongStartedPlaying=async function(songTokenJson,offset){
+    reportSongState(songTokenJson,offset);
+}
+exports.reportSongStoppedPlaying=async function(songTokenJson,offset){
+    reportSongState(songTokenJson,offset);
 }
 
 exports.getFirstSongInfo=async function (playlistId){
@@ -84,6 +109,12 @@ exports.getFirstSongInfo=async function (playlistId){
     return app.getFirstSongInfo();
 }
 exports.getNextSongInfo=async function (currentSongTokenJson){
+    var songToken=JSON.parse(currentSongTokenJson);
+    var app=new PlaylistAPP();
+    app.initAPP(songToken.playlistId);
+    return app.getNextSongInfo(songToken.songId);
+}
+exports.getPreviousSongInfo=async function (currentSongTokenJson){
     var songToken=JSON.parse(currentSongTokenJson);
     var app=new PlaylistAPP();
     app.initAPP(songToken.playlistId);
