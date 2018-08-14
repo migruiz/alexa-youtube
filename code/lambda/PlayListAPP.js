@@ -1,22 +1,22 @@
 var AWS = require("aws-sdk");
-process.env.AWS_SDK_LOAD_CONFIG = true;
+//process.env.AWS_SDK_LOAD_CONFIG = true;
 var dynamodb = new AWS.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
 var table = "Audio-Player-Multi-Stream";
 
-exports.PlaylistAPP=function(){
+module.exports=function PlaylistAPP(){
    
-    var appId;
-    var playlistId;
-    var playlist=[];
-    var state={};
+    this.appId;
+    this.playlistId='';
+    this.playlist=[];
+    this.state;
     this.initAppAsync=async function(playlistId){        
-        playlistId=playlistId;
-        appId='APPS/PlaylistAPP/'+playlistId;
-        playlist=await getyoutubePlaylistAsync(playlistId);
-        state=await getAppState(playlistId);
+        this.playlistId=playlistId;
+        this.appId='APPS/PlaylistAPP/'+playlistId;
+        this.playlist=await getyoutubePlaylistAsync(playlistId);
+        this.state=await getAppState(playlistId);
     }    
-    function getSongInfo(song){
+    getSongInfo=function(playlistId,song){
         return {
             song:song,
             token:JSON.stringify({appType:'PlayListAPP',playlistId:playlistId, songId:song.id})      
@@ -24,25 +24,25 @@ exports.PlaylistAPP=function(){
     }
 
     this.getLastPlayedSongInfo=function(){
-        if (state){
-            for (let index = 0; index < playlist.length; index++) {
-                const song = playlist[index];
-                if (song.id===state.currentPlayingSongId){
-                    return getSongInfo(song);
+        if (this.state){
+            for (let index = 0; index < this.playlist.length; index++) {
+                const song = this.playlist[index];
+                if (song.id===this.state.currentPlayingSongId){
+                    return getSongInfo(this.playlistId,song);
                 }
             }
-            var firstSong=playlist[0];
-            return getSongInfo(firstSong)
+            var firstSong=this.playlist[0];
+            return getSongInfo(this.playlistId,firstSong)
         }
         else{
-            var firstSong=playlist[0];
-            return getSongInfo(firstSong)
+            var firstSong=this.playlist[0];
+            return getSongInfo(this.playlistId,firstSong)
         }
     }
     this.getPrevSongInfo=function(){
-        var prevSong=getPrevSong(state.currentPlayingSongId);
-        return getSongInfo(prevSong);
-        function getPrevSong(songId){
+        var prevSong=getPrevSong(this.playlist,this.state.currentPlayingSongId);
+        return getSongInfo(this.playlistId,prevSong);
+        function getPrevSong(playlist,songId){
             for (let index = 0; index < playlist.length; index++) {
                 const song = playlist[index];
                 if (song.id===songId){
@@ -55,13 +55,13 @@ exports.PlaylistAPP=function(){
                     }
                 }            
             }
-            return playlist[0];
+            return this.playlist[0];
         }
     }
     this.getNextSongInfo=function(){
-        var nextSong=getNextSong(state.currentPlayingSongId);
-        return getSongInfo(nextSong);
-        function getNextSong(songId){
+        var nextSong=getNextSong(this.playlist,this.state.currentPlayingSongId);
+        return getSongInfo(this.playlistId,nextSong);
+        function getNextSong(playlist,songId){
             for (let index = 0; index < playlist.length; index++) {
                 const song = playlist[index];
                 if (song.id===songId){
@@ -80,15 +80,16 @@ exports.PlaylistAPP=function(){
 
 
     this.setCurrentPlayingSong=function(songId,offset){
-        state.currentPlayingSongId=songId;
-        state.offset=offset;
+        this.state={};
+        this.state.currentPlayingSongId=songId;
+        this.state.offset=offset;
     }
     this.saveStateAsync=async function(){
         var dynamoParams = {
             TableName:table,
             Item:{
-                "id":appId,
-                "appState":app.state
+                "id":this.appId,
+                "appState":this.state
             }
         };
         await putAsync(dynamoParams);
@@ -103,7 +104,8 @@ async function getAppState(playlistId){
             "id":id
         }
     };
-    return await getAsync(params);
+    var data= await getAsync(params);
+    return data?data.Item.appState:null;
 }
 async function getyoutubePlaylistAsync(playlistId){
     var id='youtubeplaylists/'+playlistId;
@@ -113,7 +115,8 @@ async function getyoutubePlaylistAsync(playlistId){
             "id":id
         }
     };
-    return await getAsync(params);
+    var data= await getAsync(params);
+    return data?data.Item.items:[];
 }
 
 
@@ -132,7 +135,7 @@ async function getAsync(params){
 
         docClient.get(params, function(err, data) {
             if (err !== null) return reject(err);
-            resolve(data.Item?data.Item.items:[]);
+            resolve(data);
         });
     });
 

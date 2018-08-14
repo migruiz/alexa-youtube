@@ -75,43 +75,37 @@ const CheckAudioInterfaceHandler = {
 
 const StartPlaybackHandler = {
   canHandle(handlerInput) {
-    if (request.type === 'IntentRequest') {
-      return request.intent.name === 'PlayAudio' ||
-        request.intent.name === 'AMAZON.ResumeIntent';
+    if (handlerInput.requestEnvelope.request.type === 'IntentRequest') {
+      return handlerInput.requestEnvelope.request.intent.name === 'PlayAudio' ||
+      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.ResumeIntent';
     }
 
   },
   async handle(handlerInput) {
     var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
-    //removethis
-    await playlistAppDynamo.reportSongStartedPlayingAsync(songInfo.token,0);
     return handlerInput.responseBuilder.getResponse();
   },
 };
 
 const NextPlaybackHandler = {
   canHandle(handlerInput) {
-    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.NextIntent';
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest' && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NextIntent';
   },
   async handle(handlerInput) {
     var songInfo=await playlistAppDynamo.getNextSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
-        //removethis
-   await playlistAppDynamo.reportSongStartedPlayingAsync(songInfo.token,0);
     return handlerInput.responseBuilder.getResponse();
   },
 };
 
 const PreviousPlaybackHandler = {
   canHandle(handlerInput) {
-    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.PreviousIntent';
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest' && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.PreviousIntent';
   },
   async handle(handlerInput) {
     var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
-            //removethis
-   await playlistAppDynamo.reportSongStartedPlayingAsync(songInfo.token,0);
     return handlerInput.responseBuilder.getResponse();
   },
 };
@@ -119,10 +113,10 @@ const PreviousPlaybackHandler = {
 const PausePlaybackHandler = {
   canHandle(handlerInput) {
     return 
-      request.type === 'IntentRequest' &&
-      (request.intent.name === 'AMAZON.StopIntent' ||
-        request.intent.name === 'AMAZON.CancelIntent' ||
-        request.intent.name === 'AMAZON.PauseIntent');
+    handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+      (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent' ||
+      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
+      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.PauseIntent');
   },
   handle(handlerInput) {
     audioController.stop(handlerInput);
