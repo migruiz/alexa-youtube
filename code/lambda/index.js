@@ -5,7 +5,10 @@
 
 const alexa = require('ask-sdk');
 const constants = require('./constants');
+const playlistAppDynamo = require('./playlistAppDynamo');
+const audioController=require('./audioController');
 //process.env.AWS_SDK_LOAD_CONFIG = true; 
+const DEFaultPlayLISTID='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
 
 /* INTENT HANDLERS */
 
@@ -14,18 +17,9 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   async handle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-    let message;
-    let reprompt;
 
-    if (!playbackInfo.hasPreviousPlaybackSession) {
-      message = 'Welcome to my youtube player. You can say play to begin.';
-      reprompt = 'You can say, play to begin.';
-    } else {
-      playbackInfo.inPlaybackSession = false;
-      message = `You were listening to ${constants.audioData[playbackInfo.playOrder[playbackInfo.index]].title}. Would you like to resume?`;
-      reprompt = 'You can say yes to resume or no to play from the top.';
-    }
+    let message = 'Welcome to my youtube player. You can say play to begin.';
+    let reprompt = 'You can say, play to begin.';
 
     return handlerInput.responseBuilder
       .speak(message)
@@ -39,23 +33,11 @@ const AudioPlayerEventHandler = {
     return handlerInput.requestEnvelope.request.type.startsWith('AudioPlayer.');
   },
   async handle(handlerInput) {
-    const {
-      requestEnvelope,
-      attributesManager,
-      responseBuilder
-    } = handlerInput;
-    const audioPlayerEventName = requestEnvelope.request.type.split('.')[1];
-    const {
-      playbackSetting,
-      playbackInfo
-    } = await attributesManager.getPersistentAttributes();
-
+    const audioPlayerEventName = handlerInput.requestEnvelope.request.type.split('.')[1];
     switch (audioPlayerEventName) {
       case 'PlaybackStarted':
-        playbackInfo.token = getToken(handlerInput);
-        playbackInfo.index = await getIndex(handlerInput);
-        playbackInfo.inPlaybackSession = true;
-        playbackInfo.hasPreviousPlaybackSession = true;
+        var token=handlerInput.requestEnvelope.request.token;
+        playlistAppDynamo.reportSongStartedPlaying(token);
         break;
       case 'PlaybackFinished':
         playbackInfo.inPlaybackSession = false;
@@ -118,37 +100,22 @@ const CheckAudioInterfaceHandler = {
 
 const StartPlaybackHandler = {
   async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-    const request = handlerInput.requestEnvelope.request;
-
-    if (!playbackInfo.inPlaybackSession) {
-      return request.type === 'IntentRequest' && request.intent.name === 'PlayAudio';
-    }
-    if (request.type === 'PlaybackController.PlayCommandIssued') {
-      return true;
-    }
-
-    if (request.type === 'IntentRequest') {
-      return request.intent.name === 'PlayAudio' ||
-        request.intent.name === 'AMAZON.ResumeIntent';
-    }
+    return  request.type === 'PlaybackController.PlayCommandIssued'
   },
   handle(handlerInput) {
-    return controller.play(handlerInput);
+    var firstSongInfo=playlistAppDynamo.getFirstSongInfo(DEFaultPlayLISTID);
+    return audioController.play(handlerInput,firstSongInfo);
   },
 };
 
 const NextPlaybackHandler = {
   async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-    const request = handlerInput.requestEnvelope.request;
-
-    return playbackInfo.inPlaybackSession &&
-      (request.type === 'PlaybackController.NextCommandIssued' ||
-        (request.type === 'IntentRequest' && request.intent.name === 'AMAZON.NextIntent'));
+    return request.type === 'PlaybackController.NextCommandIssued' 
   },
   handle(handlerInput) {
-    return controller.playNext(handlerInput);
+    var token=handlerInput.requestEnvelope.request.token;
+    var nextSongInfo=playlistAppDynamo.getNextSongInfo(token);
+    return audioController.playNext(handlerInput,nextSongInfo);
   },
 };
 
@@ -451,94 +418,7 @@ async function canThrowCard(handlerInput) {
   return false;
 }
 
-const controller = {
-  async play(handlerInput) {
-    const {
-      attributesManager,
-      responseBuilder
-    } = handlerInput;
 
-    const playbackInfo = await getPlaybackInfo(handlerInput);
-    const {
-      playOrder,
-      offsetInMilliseconds,
-      index
-    } = playbackInfo;
-
-    const playBehavior = 'REPLACE_ALL';
-    const podcast = constants.audioData[playOrder[index]];
-    const token = playOrder[index];
-
-    responseBuilder
-      .speak(`This is ${podcast.title}`)
-      .withShouldEndSession(true)
-      .addAudioPlayerPlayDirective(playBehavior, podcast.url, token, offsetInMilliseconds, null);
-
-    if (await canThrowCard(handlerInput)) {
-      const cardTitle = `Playing ${podcast.title}`;
-      const cardContent = `Playing ${podcast.title}`;
-      responseBuilder.withSimpleCard(cardTitle, cardContent);
-    }
-
-    return responseBuilder.getResponse();
-  },
-  stop(handlerInput) {
-    return handlerInput.responseBuilder
-      .addAudioPlayerStopDirective()
-      .getResponse();
-  },
-  async playNext(handlerInput) {
-    const {
-      playbackInfo,
-      playbackSetting,
-    } = await handlerInput.attributesManager.getPersistentAttributes();
-
-    const nextIndex = (playbackInfo.index + 1) % constants.audioData.length;
-
-    if (nextIndex === 0 && !playbackSetting.loop) {
-      return handlerInput.responseBuilder
-        .speak('You have reached the end of the playlist')
-        .addAudioPlayerStopDirective()
-        .getResponse();
-    }
-
-    playbackInfo.index = nextIndex;
-    playbackInfo.offsetInMilliseconds = 0;
-    playbackInfo.playbackIndexChanged = true;
-
-    return this.play(handlerInput);
-  },
-  async playPrevious(handlerInput) {
-    const {
-      playbackInfo,
-      playbackSetting,
-    } = await handlerInput.attributesManager.getPersistentAttributes();
-
-    let previousIndex = playbackInfo.index - 1;
-
-    if (previousIndex === -1) {
-      if (playbackSetting.loop) {
-        previousIndex += constants.audioData.length;
-      } else {
-        return handlerInput.responseBuilder
-          .speak('You have reached the start of the playlist')
-          .addAudioPlayerStopDirective()
-          .getResponse();
-      }
-    }
-
-    playbackInfo.index = previousIndex;
-    playbackInfo.offsetInMilliseconds = 0;
-    playbackInfo.playbackIndexChanged = true;
-
-    return this.play(handlerInput);
-  },
-};
-
-function getToken(handlerInput) {
-  // Extracting token received in the request.
-  return handlerInput.requestEnvelope.request.token;
-}
 
 async function getIndex(handlerInput) {
   // Extracting index from the token received in the request.
