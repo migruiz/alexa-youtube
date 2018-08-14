@@ -37,18 +37,18 @@ const AudioPlayerEventHandler = {
       case 'PlaybackStarted':
         var token=handlerInput.requestEnvelope.request.token;
         var offset=handlerInput.requestEnvelope.request.offsetInMilliseconds;
-        playlistAppDynamo.reportSongStartedPlaying(token,offset);
+        await playlistAppDynamo.reportSongStartedPlayingAsync(token,offset);
       case 'PlaybackFinished':
         break;
       case 'PlaybackStopped':
         var token=handlerInput.requestEnvelope.request.token;
         var offset=handlerInput.requestEnvelope.request.offsetInMilliseconds;
-        playlistAppDynamo.reportSongStoppedPlaying(token,offset);
+        await playlistAppDynamo.reportSongStoppedPlayingAsync(token,offset);
       case 'PlaybackNearlyFinished':
         {
           var currentSongToken=handlerInput.requestEnvelope.request.token;
-          var nextSongInfo=playlistAppDynamo.getNextSongInfo(currentSongToken);
-          return audioController.enqueNextSong(handlerInput,currentSongToken,nextSongInfo);
+          var nextSongInfo=await playlistAppDynamo.getNextSongInfoAsync(currentSongToken);
+          audioController.enqueNextSong(handlerInput,currentSongToken,nextSongInfo);
         }
       case 'PlaybackFailed':
         console.log('Playback Failed : %j', handlerInput.requestEnvelope.request.error);
@@ -61,7 +61,7 @@ const AudioPlayerEventHandler = {
 };
 
 const CheckAudioInterfaceHandler = {
-  async canHandle(handlerInput) {
+  canHandle(handlerInput) {
     const audioPlayerInterface = ((((handlerInput.requestEnvelope.context || {}).System || {}).device || {}).supportedInterfaces || {}).AudioPlayer;
     return audioPlayerInterface === undefined
   },
@@ -74,42 +74,42 @@ const CheckAudioInterfaceHandler = {
 };
 
 const StartPlaybackHandler = {
-  async canHandle(handlerInput) {
+  canHandle(handlerInput) {
     return  handlerInput.requestEnvelope.request.type === 'PlaybackController.PlayCommandIssued'
   },
-  handle(handlerInput) {
-    var firstSongInfo=playlistAppDynamo.getFirstSongInfo(DEFaultPlayLISTID);
+  async handle(handlerInput) {
+    var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,firstSongInfo);
     return handlerInput.responseBuilder.getResponse();
   },
 };
 
 const NextPlaybackHandler = {
-  async canHandle(handlerInput) {
+  canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'PlaybackController.NextCommandIssued' 
   },
-  handle(handlerInput) {
+  async handle(handlerInput) {
     var token=handlerInput.requestEnvelope.request.token;
-    var songInfo=playlistAppDynamo.getNextSongInfo(token);
+    var songInfo=await playlistAppDynamo.getNextSongInfoAsync(token);
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
 };
 
 const PreviousPlaybackHandler = {
-  async canHandle(handlerInput) {
+  canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'PlaybackController.PreviousCommandIssued';
   },
-  handle(handlerInput) {
+  async handle(handlerInput) {
     var token=handlerInput.requestEnvelope.request.token;
-    var songInfo=playlistAppDynamo.getPreviousSongInfo(token);
+    var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync(token);
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
 };
 
 const PausePlaybackHandler = {
-  async canHandle(handlerInput) {
+  canHandle(handlerInput) {
     return 
       request.type === 'IntentRequest' &&
       (request.intent.name === 'AMAZON.StopIntent' ||
@@ -174,7 +174,7 @@ const ShuffleOffHandler = {
 };
 
 const StartOverHandler = {
-  async canHandle(handlerInput) {
+  canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
 
     return 
@@ -182,7 +182,7 @@ const StartOverHandler = {
       request.intent.name === 'AMAZON.StartOverIntent';
   },
   async handle(handlerInput) {
-    var firstSongInfo=playlistAppDynamo.getFirstSongInfo(DEFaultPlayLISTID);
+    var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,firstSongInfo);
     return handlerInput.responseBuilder.getResponse();
   },
