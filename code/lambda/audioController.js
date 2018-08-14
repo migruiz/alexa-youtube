@@ -8,17 +8,16 @@ exports.play=async function (handlerInput,songInfo){
       .speak(`This is ${songInfo.song.title}`)
       .withShouldEndSession(true)
       .addAudioPlayerPlayDirective(playBehavior, songInfo.song.url, songInfo.token, 0, null);
-
-      return handlerInput.responseBuilder.getResponse();
+}
+exports.stop=function(handlerInput){
+     handlerInput.responseBuilder
+    .addAudioPlayerStopDirective()
 }
 exports.enqueNextSong=async function (handlerInput,currentSongToken,nextSongInfo){
   
     const playBehavior = 'ENQUEUE';
-
     handlerInput.responseBuilder
       .addAudioPlayerPlayDirective(playBehavior, nextSongInfo.song.url, nextSongInfo.token, 0, currentSongToken);
-
-      return handlerInput.responseBuilder.getResponse();
 }
 
 
