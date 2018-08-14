@@ -84,6 +84,8 @@ const StartPlaybackHandler = {
   async handle(handlerInput) {
     var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
+    //removethis
+    await playlistAppDynamo.reportSongStartedPlayingAsync(songInfo.token,0);
     return handlerInput.responseBuilder.getResponse();
   },
 };
@@ -95,6 +97,8 @@ const NextPlaybackHandler = {
   async handle(handlerInput) {
     var songInfo=await playlistAppDynamo.getNextSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
+        //removethis
+   await playlistAppDynamo.reportSongStartedPlayingAsync(songInfo.token,0);
     return handlerInput.responseBuilder.getResponse();
   },
 };
@@ -106,6 +110,8 @@ const PreviousPlaybackHandler = {
   async handle(handlerInput) {
     var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync(DEFaultPlayLISTID);
     audioController.play(handlerInput,songInfo);
+            //removethis
+   await playlistAppDynamo.reportSongStartedPlayingAsync(songInfo.token,0);
     return handlerInput.responseBuilder.getResponse();
   },
 };
