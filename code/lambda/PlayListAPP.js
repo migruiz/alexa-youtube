@@ -16,7 +16,7 @@ async function getAppState(playlistId){
         }
     };
     var data= await getAsync(params);
-    return data?data.Item.appState:null;
+    return data.Item?data.Item.appState:null;
 }
 async function getyoutubePlaylistAsync(playlistId){
     var id='youtubeplaylists/'+playlistId;
