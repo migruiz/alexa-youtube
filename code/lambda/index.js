@@ -160,11 +160,11 @@ const PreviousPlaybackHandler = {
 
 const PausePlaybackHandler = {
   canHandle(handlerInput) {
-    return 
-    handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+    var result=   handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
       (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent' ||
       handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
       handlerInput.requestEnvelope.request.intent.name === 'AMAZON.PauseIntent');
+      return result;
   },
   handle(handlerInput) {
     audioController.stop(handlerInput);
@@ -177,9 +177,7 @@ const PausePlaybackHandler = {
 const ShuffleOnHandler = {
   async canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
-    return 
-      request.type === 'IntentRequest' &&
-      request.intent.name === 'AMAZON.ShuffleOnIntent';
+    return       request.type === 'IntentRequest' &&      request.intent.name === 'AMAZON.ShuffleOnIntent';
   },
   async handle(handlerInput) {
     const {
@@ -200,9 +198,7 @@ const ShuffleOffHandler = {
   async canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
 
-    return 
-      request.type === 'IntentRequest' &&
-      request.intent.name === 'AMAZON.ShuffleOffIntent';
+    return  request.type === 'IntentRequest' &&   request.intent.name === 'AMAZON.ShuffleOffIntent';
   },
   async handle(handlerInput) {
     const {
@@ -224,9 +220,7 @@ const StartOverHandler = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
 
-    return 
-      request.type === 'IntentRequest' &&
-      request.intent.name === 'AMAZON.StartOverIntent';
+    return  request.type === 'IntentRequest' &&     request.intent.name === 'AMAZON.StartOverIntent';
   },
   async handle(handlerInput) {
     var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync();
@@ -291,8 +285,6 @@ exports.handler = skillBuilder
     NextPlaybackHandler,
     PreviousPlaybackHandler,
     PausePlaybackHandler,
-    ShuffleOnHandler,
-    ShuffleOffHandler,
     StartOverHandler,
     AudioPlayerEventHandler
   )

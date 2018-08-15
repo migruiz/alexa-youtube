@@ -25,6 +25,13 @@ exports.getLastPlayedSongInfoAsync=async function (){
     await app.initAppAsync(selector.getCurrentPlaylistId());
     return app.getLastPlayedSongInfo();
 }
+exports.getFirstSongInfoAsync=async function (){
+    var selector=new PlaylistSelector();
+    await selector.initAsync();
+    var app=new PlaylistAPP();
+    await app.initAppAsync(selector.getCurrentPlaylistId());
+    return app.getFirstSongInfo();
+}
 exports.getNextSongInfoAsync=async function (){
     var selector=new PlaylistSelector();
     await selector.initAsync();

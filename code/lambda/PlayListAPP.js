@@ -114,12 +114,10 @@ class PlaylistAPP {
                     return getSongInfo(this.playlistId,song);
                 }
             }
-            var firstSong=this.playlist[0];
-            return getSongInfo(this.playlistId,firstSong)
+            return this.getFirstSongInfo();
         }
         else{
-            var firstSong=this.playlist[0];
-            return getSongInfo(this.playlistId,firstSong)
+            return this.getFirstSongInfo();
         }
     }
     getPrevSongInfo(){
@@ -133,7 +131,11 @@ class PlaylistAPP {
         return getSongInfo(this.playlistId,nextSong);
 
     }
+    getFirstSongInfo(){
+        var firstSong=this.playlist[0];
+        return getSongInfo(this.playlistId,firstSong)
 
+    }
 
     setCurrentPlayingSong(songId,offset){
         this.state={};
