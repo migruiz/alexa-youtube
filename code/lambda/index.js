@@ -38,17 +38,20 @@ const AudioPlayerEventHandler = {
         var token=handlerInput.requestEnvelope.request.token;
         var offset=handlerInput.requestEnvelope.request.offsetInMilliseconds;
         await playlistAppDynamo.reportSongStartedPlayingAsync(token,offset);
+        break;
       case 'PlaybackFinished':
         break;
       case 'PlaybackStopped':
         var token=handlerInput.requestEnvelope.request.token;
         var offset=handlerInput.requestEnvelope.request.offsetInMilliseconds;
         await playlistAppDynamo.reportSongStoppedPlayingAsync(token,offset);
+        break;
       case 'PlaybackNearlyFinished':
         {
           var currentSongToken=handlerInput.requestEnvelope.request.token;
-          var nextSongInfo=await playlistAppDynamo.getNextSongInfoAsync(currentSongToken);
+          var nextSongInfo=await playlistAppDynamo.getNextSongInfoAsync(DEFaultPlayLISTID);
           audioController.enqueNextSong(handlerInput,currentSongToken,nextSongInfo);
+          break;
         }
       case 'PlaybackFailed':
         console.log('Playback Failed : %j', handlerInput.requestEnvelope.request.error);
@@ -128,10 +131,8 @@ const PausePlaybackHandler = {
 
 const ShuffleOnHandler = {
   async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
     const request = handlerInput.requestEnvelope.request;
-
-    return playbackInfo.inPlaybackSession &&
+    return 
       request.type === 'IntentRequest' &&
       request.intent.name === 'AMAZON.ShuffleOnIntent';
   },
@@ -152,10 +153,9 @@ const ShuffleOnHandler = {
 
 const ShuffleOffHandler = {
   async canHandle(handlerInput) {
-    const playbackInfo = await getPlaybackInfo(handlerInput);
     const request = handlerInput.requestEnvelope.request;
 
-    return playbackInfo.inPlaybackSession &&
+    return 
       request.type === 'IntentRequest' &&
       request.intent.name === 'AMAZON.ShuffleOffIntent';
   },
@@ -221,6 +221,7 @@ const ErrorHandler = {
   },
   handle(handlerInput, error) {
     console.log(`Error handled: ${error.message}`);
+    console.log(`Error handled: ${error.stack}`);
     const message = 'Sorry, this is not a valid command. Please say help to hear what you can say.';
 
     return handlerInput.responseBuilder
