@@ -91,6 +91,23 @@ const StartPlaybackHandler = {
   },
 };
 
+const PlayListsHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+    && handlerInput.requestEnvelope.request.intent.name === 'PlaylistIntent';
+    
+  },
+  async handle(handlerInput) {
+    const playListSlot = handlerInput.requestEnvelope.request.intent.slots.Playlist;
+    let playListName=playListSlot.value;
+    return handlerInput.responseBuilder
+      .speak(`Opening ${playListName} playlist`)
+      .withShouldEndSession(true)
+      .getResponse();
+
+  },
+};
+
 const NextPlaybackHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest' && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NextIntent';
@@ -242,6 +259,7 @@ exports.handler = skillBuilder
     SystemExceptionHandler,
     SessionEndedRequestHandler,
     StartPlaybackHandler,
+    PlayListsHandler,
     NextPlaybackHandler,
     PreviousPlaybackHandler,
     PausePlaybackHandler,
