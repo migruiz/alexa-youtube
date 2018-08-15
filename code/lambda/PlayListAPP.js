@@ -5,6 +5,55 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 var table = "Audio-Player-Multi-Stream";
 
 
+
+
+async function getAppState(playlistId){
+    var id='APPS/PlaylistAPP/'+playlistId;
+    var params = {
+        TableName: table,
+        Key:{
+            "id":id
+        }
+    };
+    var data= await getAsync(params);
+    return data?data.Item.appState:null;
+}
+async function getyoutubePlaylistAsync(playlistId){
+    var id='youtubeplaylists/'+playlistId;
+    var params = {
+        TableName: table,
+        Key:{
+            "id":id
+        }
+    };
+    var data= await getAsync(params);
+    return data?data.Item.items:[];
+}
+
+
+async function putAsync(params){
+    return new Promise(function (resolve, reject) {
+
+        docClient.put(params, function(err, data) {
+            if (err !== null) return reject(err);
+            resolve(data);
+        });
+    });
+
+}
+async function getAsync(params){
+    return new Promise(function (resolve, reject) {
+
+        docClient.get(params, function(err, data) {
+            if (err !== null) return reject(err);
+            resolve(data);
+        });
+    });
+
+}
+
+
+
 function getPrevSong(playlist,songId){            
     for (let index = 0; index < playlist.length; index++) {
         const song = playlist[index];
@@ -62,26 +111,26 @@ class PlaylistAPP {
             for (let index = 0; index < this.playlist.length; index++) {
                 const song = this.playlist[index];
                 if (song.id===this.state.currentPlayingSongId){
-                    return getSongInfo(playlistId,song);
+                    return getSongInfo(this.playlistId,song);
                 }
             }
             var firstSong=this.playlist[0];
-            return getSongInfo(playlistId,firstSong)
+            return getSongInfo(this.playlistId,firstSong)
         }
         else{
             var firstSong=this.playlist[0];
-            return getSongInfo(playlistId,firstSong)
+            return getSongInfo(this.playlistId,firstSong)
         }
     }
     getPrevSongInfo(){
         var prevSong=getPrevSong(this.playlist,this.state.currentPlayingSongId);
-        return getSongInfo(playlistId,prevSong);
+        return getSongInfo(this.playlistId,prevSong);
         
     }
 
     getNextSongInfo(){
         var nextSong=getNextSong(this.playlist,this.state.currentPlayingSongId);
-        return getSongInfo(playlistId,nextSong);
+        return getSongInfo(this.playlistId,nextSong);
 
     }
 
