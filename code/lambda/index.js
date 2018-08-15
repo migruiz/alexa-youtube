@@ -9,6 +9,26 @@ const audioController=require('./audioController');
 //process.env.AWS_SDK_LOAD_CONFIG = true; 
 const DEFaultPlayLISTID='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
 
+
+var testFx=async ()=>{
+  process.env.AWS_SDK_LOAD_CONFIG = true;
+  const PlayListAPP=require('./PlayListAPP');
+  const PlaylistSelector=require('./PlaylistSelector');
+  var selector=new PlaylistSelector();
+  selector.id
+
+
+  var papp=new PlayListAPP();
+  await papp.initAppAsync(DEFaultPlayLISTID);
+  var currentSong=await papp.getLastPlayedSongInfo();
+  var nextSong=await papp.getNextSongInfo();
+  var prevSong=await papp.getPrevSongInfo();
+  papp.setCurrentPlayingSong(nextSong.song.id,0);
+  await papp.saveStateAsync();
+  return;
+}
+testFx(); return;
+
 /* INTENT HANDLERS */
 
 const LaunchRequestHandler = {

@@ -1,9 +1,9 @@
 
 const id = 'APPS/PlaylistAPP/CurrentPlayList';
 const DEFAULT_PLAYLISTID='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
-const SONIA_PLAYLISTID='';
-const MIGUEL_PLAYLISTID='';
-const ALEJANDRO_PLAYLISTID='';
+const SONIA_PLAYLISTID='PLJLM5RvmYjvzPpigUHNYOcuK8wK8ELCGz';
+const MIGUEL_PLAYLISTID='PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv';
+const ALEJANDRO_PLAYLISTID='PLJLM5RvmYjvxxipdtdO7clRjTomBB8ERi';
 async function getState() {
     var params = {
         TableName: table,
