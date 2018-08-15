@@ -1,0 +1,113 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "youtube",
+            "intents": [
+                {
+                    "name": "PlayAudio",
+                    "samples": [
+                        "pon",
+                        "reproduce",
+                        "toca"
+                    ]
+                },
+                {
+                    "name": "AMAZON.PauseIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ResumeIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StartOverIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.LoopOnIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.LoopOffIntent",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "PlaylistIntent",
+                    "slots": [
+                        {
+                            "name": "Playlist",
+                            "type": "LIST_OF_PLAYLISTS"
+                        }
+                    ],
+                    "samples": [
+                        "pon la lista de {Playlist}",
+                        "toca la lista de {Playlist}",
+                        "reproduce la lista de {Playlist}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Alejandro"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sonia"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Miguel"
+                            }
+                        }
+                    ],
+                    "name": "LIST_OF_PLAYLISTS"
+                }
+            ]
+        }
+    }
+}
