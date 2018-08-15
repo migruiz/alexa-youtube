@@ -7,7 +7,6 @@ const alexa = require('ask-sdk');
 const playlistAppDynamo = require('./playlistAppDynamo');
 const audioController=require('./audioController');
 //process.env.AWS_SDK_LOAD_CONFIG = true; 
-const DEFaultPlayLISTID='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
 
 
 var testFx=async ()=>{
@@ -15,7 +14,11 @@ var testFx=async ()=>{
   const PlayListAPP=require('./PlayListAPP');
   const PlaylistSelector=require('./PlaylistSelector');
   var selector=new PlaylistSelector();
-  selector.id
+  await selector.initAsync();
+  
+  selector.setDefaultPlayList();
+  await selector.saveStateAsync();
+  return;
 
 
   var papp=new PlayListAPP();
@@ -27,7 +30,7 @@ var testFx=async ()=>{
   await papp.saveStateAsync();
   return;
 }
-testFx(); return;
+//testFx(); return;
 
 /* INTENT HANDLERS */
 
@@ -69,7 +72,7 @@ const AudioPlayerEventHandler = {
       case 'PlaybackNearlyFinished':
         {
           var currentSongToken=handlerInput.requestEnvelope.request.token;
-          var nextSongInfo=await playlistAppDynamo.getNextSongInfoAsync(DEFaultPlayLISTID);
+          var nextSongInfo=await playlistAppDynamo.getNextSongInfoAsync();
           audioController.enqueNextSong(handlerInput,currentSongToken,nextSongInfo);
           break;
         }
@@ -105,7 +108,7 @@ const StartPlaybackHandler = {
 
   },
   async handle(handlerInput) {
-    var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync(DEFaultPlayLISTID);
+    var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync();
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
@@ -120,6 +123,11 @@ const PlayListsHandler = {
   async handle(handlerInput) {
     const playListSlot = handlerInput.requestEnvelope.request.intent.slots.Playlist;
     let playListName=playListSlot.value;
+
+    await playlistAppDynamo.setCurrentPlayListByNameAsync(playListName);
+    var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync();
+    audioController.play(handlerInput,songInfo);
+
     return handlerInput.responseBuilder
       .speak(`Opening ${playListName} playlist`)
       .withShouldEndSession(true)
@@ -133,7 +141,7 @@ const NextPlaybackHandler = {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest' && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NextIntent';
   },
   async handle(handlerInput) {
-    var songInfo=await playlistAppDynamo.getNextSongInfoAsync(DEFaultPlayLISTID);
+    var songInfo=await playlistAppDynamo.getNextSongInfoAsync();
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
@@ -144,7 +152,7 @@ const PreviousPlaybackHandler = {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest' && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.PreviousIntent';
   },
   async handle(handlerInput) {
-    var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync(DEFaultPlayLISTID);
+    var songInfo=await playlistAppDynamo.getPreviousSongInfoAsync();
     audioController.play(handlerInput,songInfo);
     return handlerInput.responseBuilder.getResponse();
   },
@@ -221,7 +229,7 @@ const StartOverHandler = {
       request.intent.name === 'AMAZON.StartOverIntent';
   },
   async handle(handlerInput) {
-    var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync(DEFaultPlayLISTID);
+    var firstSongInfo=await playlistAppDynamo.getFirstSongInfoAsync();
     audioController.play(handlerInput,firstSongInfo);
     return handlerInput.responseBuilder.getResponse();
   },

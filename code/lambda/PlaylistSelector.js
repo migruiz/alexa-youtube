@@ -55,7 +55,7 @@ class PlaylistSelector {
 
 
     getCurrentPlaylistId() {
-        return this.state.playlistId;
+        return this.state.playlistId||DEFAULT_PLAYLISTID;
     }
     setCurrentPlaylistByName(playListName) {
         this.state.playListName = playListName;
