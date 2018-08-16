@@ -40,8 +40,8 @@ const LaunchRequestHandler = {
   },
   async handle(handlerInput) {
 
-    let message = 'Welcome to my youtube player. You can say play to begin.';
-    let reprompt = 'You can say, play to begin.';
+    let message = 'Welcome to my youtube player. You can say something like, Open Alejandro playlist';
+    let reprompt = 'You can ask for the name of the playlist';
 
     return handlerInput.responseBuilder
       .speak(message)
@@ -123,6 +123,15 @@ const PlayListsHandler = {
   async handle(handlerInput) {
     const playListSlot = handlerInput.requestEnvelope.request.intent.slots.Playlist;
     let playListName=playListSlot.value;
+    let resolutionCode=playListSlot.resolutions.resolutionsPerAuthority[0].status.code;
+    if (resolutionCode==='ER_SUCCESS_NO_MATCH'){
+      let reprompt = 'You can ask for the name of the playlist';
+      return handlerInput.responseBuilder
+      .speak(`Sorry, I could not find the ${playListName} playlist. You can say something like, Open Alejandro playlist`)
+      .withShouldEndSession(false)
+      .getResponse();
+      return;
+    }
 
     await playlistAppDynamo.setCurrentPlayListByNameAsync(playListName);
     var songInfo=await playlistAppDynamo.getLastPlayedSongInfoAsync();

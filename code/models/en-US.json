@@ -81,6 +81,12 @@
                     "samples": [
                         "Play {Playlist} playlist",
                         "Play {Playlist}",
+                        "Open {Playlist}",
+                        "Open {Playlist} playlist",
+                        "Select {Playlist}",
+                        "Select {Playlist} playlist",
+                        "Start playing {Playlist}",
+                        "Start playing {Playlist} playlist",
                         "Start {Playlist}",
                         "Start {Playlist} playlist"
                     ]
