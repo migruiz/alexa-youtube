@@ -288,5 +288,11 @@ exports.handler = skillBuilder
     StartOverHandler,
     AudioPlayerEventHandler
   )
+  .addResponseInterceptors(function(handlerInput, response){
+		console.log("\n" + "******************* REQUEST ENVELOPE **********************");
+		console.log("\n" + JSON.stringify(handlerInput.requestEnvelope.request, null, 4));
+		console.log("\n" + "******************* RESPONSE  **********************");
+		console.log("\n" + JSON.stringify(response, null, 4));
+	})
   .addErrorHandlers(ErrorHandler)
   .lambda();
