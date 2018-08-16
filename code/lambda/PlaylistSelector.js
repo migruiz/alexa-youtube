@@ -7,7 +7,7 @@ var table = "Audio-Player-Multi-Stream";
 
 const id = 'APPS/PlaylistAPP/CurrentPlayList';
 const DEFAULT_PLAYLISTID='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
-const SONIA_PLAYLISTID='PLJLM5RvmYjvzPpigUHNYOcuK8wK8ELCGz';
+const SONIA_PLAYLISTID='PLeWM4qlL49K7jPqM5PCM5bpx0ZJYSBlzX';
 const MIGUEL_PLAYLISTID='PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv';
 const ALEJANDRO_PLAYLISTID='PLJLM5RvmYjvxxipdtdO7clRjTomBB8ERi';
 
