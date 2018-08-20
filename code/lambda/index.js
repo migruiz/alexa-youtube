@@ -78,7 +78,16 @@ const AudioPlayerEventHandler = {
         }
       case 'PlaybackFailed':
         console.log('Playback Failed : %j', handlerInput.requestEnvelope.request.error);
-        return;
+        var tokenThatFailed=handlerInput.requestEnvelope.request.token;
+        var playingTokenWhenFailed=handlerInput.requestEnvelope.request.currentPlaybackState.token;        
+        var songInfoThatFailed=await playlistAppDynamo.getSongInfoByTokenAsync(tokenThatFailed);
+        if (tokenThatFailed!==playingTokenWhenFailed){          
+          audioController.enqueNextSongAndReplace(handlerInput,songInfoThatFailed);
+        }
+        else{
+          audioController.play(handlerInput,songInfoThatFailed);
+        }
+        break;
       default:
         throw new Error('Should never reach here!');
     }

@@ -126,6 +126,15 @@ class PlaylistAPP {
         
     }
 
+    getSongInfoById(songId){
+        for (let index = 0; index < this.playlist.length; index++) {
+            const song = this.playlist[index];
+            if (song.id===songId){
+                return getSongInfo(this.playlistId,song);
+            }
+        }
+    }
+
     getNextSongInfo(){
         var nextSong=getNextSong(this.playlist,this.state.currentPlayingSongId);
         return getSongInfo(this.playlistId,nextSong);

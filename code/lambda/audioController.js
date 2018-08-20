@@ -19,6 +19,12 @@ exports.enqueNextSong=async function (handlerInput,currentSongToken,nextSongInfo
     handlerInput.responseBuilder
       .addAudioPlayerPlayDirective(playBehavior, nextSongInfo.song.url, nextSongInfo.token, 0, currentSongToken);
 }
+exports.enqueNextSongAndReplace=async function (handlerInput,songInfo){
+  
+    const playBehavior = 'REPLACE_ENQUEUED';
+    handlerInput.responseBuilder
+      .addAudioPlayerPlayDirective(playBehavior, songInfo.song.url, songInfo.token, 0, null);
+}
 
 
 

@@ -48,6 +48,14 @@ exports.getPreviousSongInfoAsync=async function (){
 
 
 }
+
+exports.getSongInfoByTokenAsync=async function (jsonToken){
+    var token=JSON.parse(jsonToken);
+    var app=new PlaylistAPP();
+    await app.initAppAsync(token.playlistId);
+    return app.getSongInfoById(token.songId);
+}
+
 exports.setCurrentPlayListByNameAsync=async function (playlistName){
     var selector=new PlaylistSelector();
     await selector.initAsync();
