@@ -41,7 +41,7 @@ const LaunchRequestHandler = {
   async handle(handlerInput) {
 
     let message = 'Welcome to my youtube player. You can say something like, Open Alejandro playlist';
-    let reprompt = 'You can ask for the name of the playlist';
+    let reprompt = 'You can say something like, Open Alejandro playlist';
 
     return handlerInput.responseBuilder
       .speak(message)

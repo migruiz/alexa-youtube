@@ -6,7 +6,6 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 var table = "Audio-Player-Multi-Stream";
 
 const id = 'APPS/PlaylistAPP/CurrentPlayList';
-const DEFAULT_PLAYLISTID='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
 const SONIA_PLAYLISTID='PLeWM4qlL49K7jPqM5PCM5bpx0ZJYSBlzX';
 const MIGUEL_PLAYLISTID='PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv';
 const ALEJANDRO_PLAYLISTID='PLJLM5RvmYjvxxipdtdO7clRjTomBB8ERi';
@@ -55,7 +54,7 @@ class PlaylistSelector {
 
 
     getCurrentPlaylistId() {
-        return this.state.playlistId||DEFAULT_PLAYLISTID;
+        return this.state.playlistId;
     }
     setCurrentPlaylistByName(playListName) {
         this.state.playListName = playListName;
@@ -69,13 +68,8 @@ class PlaylistSelector {
             this.state.playlistId = MIGUEL_PLAYLISTID;
         }
         else{
-            this.state.playListName = 'Default';
-            this.state.playlistId = DEFAULT_PLAYLISTID;
+            throw new Error(playListName);
         }
-    }
-    setDefaultPlayList() {
-        this.state.playListName = 'Default';
-        this.state.playlistId = DEFAULT_PLAYLISTID;
     }
 
     async saveStateAsync() {

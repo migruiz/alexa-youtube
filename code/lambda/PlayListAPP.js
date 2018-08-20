@@ -63,7 +63,7 @@ function getPrevSong(playlist,songId){
                 return playlist[prevSongIndex];
             }
             else{
-                return playlist[0];
+                return playlist[playlist.length-1];
             }
         }            
     }
