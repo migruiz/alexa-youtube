@@ -100,7 +100,7 @@ const CheckAudioInterfaceHandler = {
     const audioPlayerInterface = ((((handlerInput.requestEnvelope.context || {}).System || {}).device || {}).supportedInterfaces || {}).AudioPlayer;
     return audioPlayerInterface === undefined
   },
-  handle(handlerInput) { 
+  handle(handlerInput) {
     return handlerInput.responseBuilder
       .speak('Sorry, this skill is not supported on this device')
       .withShouldEndSession(true)
